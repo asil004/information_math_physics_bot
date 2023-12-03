@@ -49,6 +49,11 @@ def get_theme(subject):
     return obj
 
 
+def get_themes_only():
+    obj = cur.execute("SELECT theme FROM information", ).fetchall()
+    return obj
+
+
 async def set_info(data):
     cur.execute("INSERT INTO information (subject, theme, picid, info) VALUES (?, ?, ?, ?)",
                 (data['subject'], data['theme'], data['pic'], data['info']))

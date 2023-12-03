@@ -8,24 +8,6 @@ from filters.constants import (
 )
 
 
-# def menu():
-#     builder = KeyboardBuilder(KeyboardButton)
-#
-#     # db get subjects
-#     subjects = get_subjects()
-#     if len(subjects) == 0:
-#         return
-#     for subject in subjects:
-#         builder.add(
-#             *[
-#                 KeyboardButton(text=subject[1])
-#             ]
-#         )
-#     builder.adjust(2)
-#
-#     return builder.as_markup(resize_keyboard=True)
-
-
 def admin_menu(id):
     builder = KeyboardBuilder(KeyboardButton)
 
@@ -40,7 +22,7 @@ def admin_menu(id):
         )
 
     superuser = os.getenv('ADMIN')
-    if int(superuser) == id:
+    if str(id) in superuser:
         builder.add(
             *[
                 KeyboardButton(text=ADMIN)

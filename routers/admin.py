@@ -32,7 +32,7 @@ class DelTheme(StatesGroup):
 @router.message(F.text == ADMIN)
 async def admin(message: types.Message):
     superuser = os.getenv('ADMIN')
-    if superuser:
+    if str(message.from_user.id) in superuser:
         await message.answer(text=ADMIN_TEXT, reply_markup=admin_panel())
 
 
@@ -42,7 +42,7 @@ async def add_subject(message: types.Message, state: FSMContext):
     await state.clear()
     await state.set_state(Info.subject)
     superuser = os.getenv('ADMIN')
-    if superuser:
+    if str(message.from_user.id) in superuser:
         await message.answer(text=INPUT_SUBJECT, reply_markup=cancel())
 
 
@@ -65,7 +65,7 @@ async def add_theme(message: types.Message, state: FSMContext):
     await state.update_data(subject=message.text)
     await state.set_state(Info.theme)
     superuser = os.getenv('ADMIN')
-    if superuser:
+    if str(message.from_user.id) in superuser:
         await message.answer(text=INPUT_THEME, reply_markup=cancel())
 
 
@@ -74,7 +74,7 @@ async def add_pic(message: types.Message, state: FSMContext):
     await state.update_data(theme=message.text)
     await state.set_state(Info.pic)
     superuser = os.getenv('ADMIN')
-    if superuser:
+    if str(message.from_user.id) in superuser:
         await message.answer(text=INPUT_PIC, reply_markup=cancel())
 
 
@@ -83,7 +83,7 @@ async def add_pic(message: types.Message, state: FSMContext):
     await state.update_data(pic=message.photo[0].file_id)
     await state.set_state(Info.info)
     superuser = os.getenv('ADMIN')
-    if superuser:
+    if str(message.from_user.id) in superuser:
         await message.answer(text=INPUT_INFO, reply_markup=cancel())
 
 
@@ -94,7 +94,7 @@ async def add_info(message: types.Message, state: FSMContext):
     await state.clear()
 
     superuser = os.getenv('ADMIN')
-    if superuser:
+    if str(message.from_user.id) in superuser:
         res = await set_info(data=data)
         if res:
             await message.answer(text=SUCC_ADD_INFO, reply_markup=admin_menu(message.from_user.id))
@@ -106,7 +106,7 @@ async def add_info(message: types.Message, state: FSMContext):
 @router.message(F.text == DELETE_INFO)
 async def delete_info(message: types.Message):
     superuser = os.getenv('ADMIN')
-    if superuser:
+    if str(message.from_user.id) in superuser:
         await message.answer(text=ADMIN_DEL, reply_markup=del_kb())
 
 
@@ -114,7 +114,7 @@ async def delete_info(message: types.Message):
 async def delete_sub(message: types.Message):
     superuser = os.getenv('ADMIN')
     subjects = get_subjects()
-    if superuser:
+    if str(message.from_user.id) in superuser:
         await message.answer(text=DEL_SUBJ_TEXT)
         for subject in subjects:
             await message.answer(text=DELL.format(fan=subject[0]), reply_markup=del_info_ikb(subject[0]))
@@ -125,7 +125,7 @@ async def delete_theme_sbj(message: types.Message, state: FSMContext):
     await state.set_state(DelTheme.subj)
     superuser = os.getenv('ADMIN')
     subjects = get_subjects()
-    if superuser:
+    if str(message.from_user.id) in superuser:
         await message.answer(text=SUBJECTS_SELECT, reply_markup=subjects_kb(subjects))
 
 
@@ -134,7 +134,7 @@ async def delete_theme(message: types.Message, state: FSMContext):
     await state.set_state(DelTheme.theme)
     superuser = os.getenv('ADMIN')
     themes = get_theme(message.text)
-    if superuser:
+    if str(message.from_user.id) in superuser:
         await message.answer(text=DEL_THEME_TEXT)
         for theme in themes:
             await message.answer(text=DELL_TH.format(mavzu=theme[0]), reply_markup=del_theme_ikb(theme[0]))
@@ -145,7 +145,7 @@ async def delete_theme(message: types.Message, state: FSMContext):
 @router.callback_query(DelSubjCallbackData.filter())
 async def dell_subj_callback(query: types.CallbackQuery, callback_data: CallbackData):
     superuser = os.getenv('ADMIN')
-    if superuser:
+    if str(message.from_user.id) in superuser:
         dell = del_subjects(callback_data.name)
         if dell:
             await query.message.answer(text=SUCC_DEL_INFO)
@@ -156,9 +156,14 @@ async def dell_subj_callback(query: types.CallbackQuery, callback_data: Callback
 @router.callback_query(DelThemeCallbackData.filter())
 async def dell_theme_callback(query: types.CallbackQuery, callback_data: CallbackData):
     superuser = os.getenv('ADMIN')
-    if superuser:
+    if str(message.from_user.id) in superuser:
         dell = del_themes(callback_data.name)
         if dell:
             await query.message.answer(text=SUCC_DEL_INFO)
         else:
             await query.message.answer(text=ERR_ADD)
+
+
+@router.message()
+async def dont_know(message: types.Message):
+    await message.answer(text="Kechirasiz sizni tushunmayabman 😕")

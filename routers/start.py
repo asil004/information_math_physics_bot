@@ -14,7 +14,7 @@ router = Router()
 @router.message(CommandStart())
 async def start_handler(message: types.Message):
     superuser = os.getenv('ADMIN')
-    if superuser:
+    if str(message.from_user.id) in superuser:
         await message.answer(text=START_TEXT, reply_markup=admin_menu(message.from_user.id))
     else:
         await message.answer(text=START_TEXT, reply_markup=admin_menu(message.from_user.id))
