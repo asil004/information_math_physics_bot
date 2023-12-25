@@ -162,8 +162,3 @@ async def dell_theme_callback(query: types.CallbackQuery, callback_data: Callbac
             await query.message.answer(text=SUCC_DEL_INFO)
         else:
             await query.message.answer(text=ERR_ADD)
-
-
-@router.message()
-async def dont_know(message: types.Message):
-    await message.answer(text="Kechirasiz sizni tushunmayabman 😕")
