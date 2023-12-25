@@ -7,7 +7,7 @@ from aiogram import Dispatcher, Bot, Router, types
 from aiogram.enums import ParseMode
 from aiogram.types import BotCommand
 from dotenv import load_dotenv
-
+# from aiogram.client.session.aiohttp import AiohttpSession
 from database import database as db
 
 from routers import router as all_routers
@@ -32,7 +32,8 @@ async def main() -> None:
     dp = Dispatcher()
 
     dp.include_router(router)
-    bot = Bot(token=os.getenv('TOKEN'), parse_mode=ParseMode.HTML)
+    # session = AiohttpSession(proxy=os.getenv("PROXY_URL"))
+    bot = Bot(token=os.getenv('TOKEN'), parse_mode=ParseMode.HTML) #session=session
     commands = [
         BotCommand(command='start', description='Botni ishga tushurish ♻')
     ]
