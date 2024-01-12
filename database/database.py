@@ -1,7 +1,7 @@
 import asyncio
 import sqlite3 as sq
 
-db = sq.connect(r'C:\Users\USER\Desktop\information_math_physics_bot\information.db')
+db = sq.connect(r'information.db')
 cur = db.cursor()
 
 
